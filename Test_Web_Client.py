@@ -11,7 +11,6 @@ ip = input("Introduzca el ip del servidor: ")
 server_address = (ip,puerto)
 print('Conectando a %s por el puerto %s' % server_address)
 sock.connect(server_address)
-
 while True:
 	message = sys.stdin.readline()
 	message = message.encode()
