@@ -1,17 +1,15 @@
 # Chat server. Python 3.4.3
 
-import socket
 import sys
-import time
+import socket
 import threading
-import hashlib
 
 
 def Client(IP,PORT):
 	# Create Server Socket (TCP)
 	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	serverAddr = (IP,PORT)
-	print('Configurado con el IP %s por el puerto %s' %serverAddr)
+	print("Configurado con el IP %s por el puerto %s" %serverAddr)
 	try:
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		serverSocket.bind(serverAddr)
@@ -23,12 +21,12 @@ def Client(IP,PORT):
 		# Wait for a connection
 		try:
 			connection, clientAddr = serverSocket.accept()
-			print('\nConexion proveniente de: ', clientAddr[0])
+			print("\nConexion proveniente de: ", clientAddr[0])
 			# Receive the data in small chunks and retransmit it
 			while True:
 				try:
 					data = connection.recv(1024)
-					# Convert to Unicode again
+					# Convert to Unicode
 					dataU = data.decode('UTF-8').upper()
 					print(dataU)
 					# Return an Echo

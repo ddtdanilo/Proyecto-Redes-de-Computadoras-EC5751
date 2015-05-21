@@ -1,8 +1,7 @@
 # Chat client. Python 3.4.3
 
-import socket
 import sys
-import time
+import socket
 
 # Create Client Socket (TCP)
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,11 +10,10 @@ clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 PORT = int(input("Introduzca el puerto: "))
 IP = input("Introduzca el IP del servidor: ")
 serverAddr = (IP,PORT)
-print('Conectando a %s por el puerto %s' %serverAddr)
+print("Conectando a %s por el puerto %s", serverAddr)
 clientSocket.connect(serverAddr)
 while True:
-	msg = input("Yo: ")
-	msg = msg.encode()
+	msg = input("Yo: ").encode()
 	clientSocket.sendall(msg)
 	# Look for the response
 	amount_received = 0
@@ -24,5 +22,5 @@ while True:
 	while amount_received < amount_expected:
 		data = clientSocket.recv(amount_expected)
 		amount_received += len(data)
-		dataU = data.decode('UTF-8') # Convert to Unicode again
-		print("Servidor: %s" %dataU)
+		dataU = data.decode('UTF-8') # Convert to Unicode
+		print("Servidor:", dataU)
