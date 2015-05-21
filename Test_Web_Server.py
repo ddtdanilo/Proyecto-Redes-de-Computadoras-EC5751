@@ -1,3 +1,5 @@
+# Chat server. Python 3.4.3
+
 import socket
 import sys
 import time
@@ -5,31 +7,31 @@ import threading
 import hashlib
 
 
-def Cliente(ip,puerto):
-	# Crea el Socket de TCP/IP
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	# Enlace del socket
-	DireccionServidor = (ip,puerto)
-	print('Configurado con el IP %s por el puerto %s' %DireccionServidor)
+def Client(IP,PORT):
+	# Create Server Socket (TCP)
+	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	serverAddr = (IP,PORT)
+	print('Configurado con el IP %s por el puerto %s' %serverAddr)
 	try:
-		sock.bind(DireccionServidor)
-		sock.listen(1)
+		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		serverSocket.bind(serverAddr)
+		serverSocket.listen(1)
 	except:
 		print("Error. Puerto Ocupado")
 		exit(-1)
 	while True:
 		# Wait for a connection
-		#print('waiting for a connection')
 		try:
-			connection,client_address = sock.accept()
-			print('\nConexion proveniente de: ', client_address)
+			connection, clientAddr = serverSocket.accept()
+			print('\nConexion proveniente de: ', clientAddr[0])
 			# Receive the data in small chunks and retransmit it
 			while True:
 				try:
 					data = connection.recv(1024)
-					dataU = data.decode('utf-8').upper()# Convierto Unicode de nuevo
+					# Convert to Unicode again
+					dataU = data.decode('UTF-8').upper()
 					print(dataU)
-					#Devuelvo un Echo
+					# Return an Echo
 					connection.sendall(dataU.encode())
 				except:
 					print("No hay data entrante")
@@ -38,13 +40,12 @@ def Cliente(ip,puerto):
 			# Clean up the connection
 			print("Cerrando conexion")
 			connection.close()
-	
+
 		return
 
-def threadNuevoC(ip,puerto):
-	tCliente = threading.Thread(name='cliente', target = Cliente,args=(ip,puerto))
-	tCliente.start()
+def threadNewClient(IP,PORT):
+	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT))
+	tClient.start()
 
-threadNuevoC('localhost',4440)
-threadNuevoC('localhost',4439)
-
+threadNewClient('127.0.0.1',4440)
+threadNewClient('LocalHost',4439)
