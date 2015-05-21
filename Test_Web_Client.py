@@ -24,4 +24,3 @@ while True:
 		amount_received += len(data)
 		dataU = data.decode('utf-8')# Convierto Unicode de nuevo
 		print(dataU)
-Probando GitHub
