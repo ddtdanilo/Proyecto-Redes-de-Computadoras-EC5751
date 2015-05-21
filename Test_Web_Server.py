@@ -7,9 +7,8 @@ import threading
 
 def Client(IP,PORT):
 	# Create Server Socket (TCP)
-	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	serverAddr = (IP,PORT)
-	print("Configurado con el IP %s por el puerto %s" %serverAddr)
+	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	try:
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		serverSocket.bind(serverAddr)
@@ -17,6 +16,7 @@ def Client(IP,PORT):
 	except:
 		print("Error. Puerto Ocupado")
 		exit(-1)
+	print("Configurado con el IP %s por el puerto %s" %serverAddr)
 	while True:
 		# Wait for a connection
 		try:
