@@ -5,6 +5,8 @@ import socket
 import threading
 
 
+print("Servidor de Chat")
+
 def Client(IP,PORT):
 	# Create Server Socket (TCP)
 	serverAddr = (IP,PORT)
@@ -13,10 +15,11 @@ def Client(IP,PORT):
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		serverSocket.bind(serverAddr)
 		serverSocket.listen(1)
+		print("Configurado con el IP %s por el puerto %s" %serverAddr)
 	except:
 		print("Error. Puerto Ocupado")
 		exit(-1)
-	print("Configurado con el IP %s por el puerto %s" %serverAddr)
+
 	while True:
 		# Wait for a connection
 		try:
@@ -26,7 +29,8 @@ def Client(IP,PORT):
 			while True:
 				try:
 					data = connection.recv(1024)
-					# Convert to Unicode
+					if data.decode('UTF-8') == '/q': break
+					# Convert to Unicode and uppercase
 					dataU = data.decode('UTF-8').upper()
 					print(dataU)
 					# Return an Echo
@@ -38,8 +42,7 @@ def Client(IP,PORT):
 			# Clean up the connection
 			print("Cerrando conexion")
 			connection.close()
-
-		return
+			exit(-1)
 
 def threadNewClient(IP,PORT):
 	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT))

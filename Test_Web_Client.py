@@ -3,15 +3,18 @@
 import sys
 import socket
 
+
+print('Cliente de Chat. Envie "/q" para salir')
+
 # Create Client Socket (TCP)
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
 # Connect the Socket to the port where the Server is listening
 PORT = int(input("Introduzca el puerto: "))
 IP = input("Introduzca el IP del servidor: ")
 serverAddr = (IP,PORT)
-print("Conectando a %s por el puerto %s", serverAddr)
+print("Conectando a %s por el puerto %s" %serverAddr)
 clientSocket.connect(serverAddr)
+
 while True:
 	msg = input("Yo: ").encode()
 	clientSocket.sendall(msg)
@@ -21,6 +24,7 @@ while True:
 
 	while amount_received < amount_expected:
 		data = clientSocket.recv(amount_expected)
+		if not data: exit(-1)
 		amount_received += len(data)
 		dataU = data.decode('UTF-8') # Convert to Unicode
 		print("Servidor:", dataU)
