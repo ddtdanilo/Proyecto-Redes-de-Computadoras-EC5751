@@ -11,10 +11,12 @@ def Client(IP,PORT):
 	# Create Server Socket (TCP)
 	serverAddr = (IP,PORT)
 	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 	try:
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		serverSocket.bind(serverAddr)
-		serverSocket.listen(2)
+		serverSocket.listen(4)
+
 		print("Configurado con el IP %s por el puerto %s" % serverAddr)
 	except:
 		print("Error. Puerto Ocupado")
@@ -48,5 +50,8 @@ def threadNewClient(IP,PORT):
 	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT))
 	tClient.start()
 
-threadNewClient('localhost',4440)
-threadNewClient('localhost',4439)
+
+ip = str(socket.gethostbyname(socket.gethostname()))
+print(ip)
+threadNewClient(ip,4440)
+threadNewClient(ip,4439)
