@@ -1,50 +1,52 @@
-import socket
+# Chat server. Python 3.4.3
+
 import sys
-import time
+import socket
 import threading
-import hashlib
 
 
-def Cliente(ip,puerto):
-	# Crea el Socket de TCP/IP
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	# Enlace del socket
-	DireccionServidor = (ip,puerto)
-	print('Configurado con el IP %s por el puerto %s' %DireccionServidor)
+print("Servidor de Chat")
+
+def Client(IP,PORT):
+	# Create Server Socket (TCP)
+	serverAddr = (IP,PORT)
+	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	try:
-		sock.bind(DireccionServidor)
-		sock.listen(1)
+		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		serverSocket.bind(serverAddr)
+		serverSocket.listen(1)
+		print("Configurado con el IP %s por el puerto %s" % serverAddr)
 	except:
 		print("Error. Puerto Ocupado")
 		exit(-1)
+
 	while True:
 		# Wait for a connection
-		#print('waiting for a connection')
 		try:
-			connection,client_address = sock.accept()
-			print('\nConexion proveniente de: ', client_address)
+			connection, clientAddr = serverSocket.accept()
+			print("\nConexion proveniente de ", clientAddr)
 			# Receive the data in small chunks and retransmit it
 			while True:
 				try:
 					data = connection.recv(1024)
-					dataU = data.decode('utf-8').upper()# Convierto Unicode de nuevo
+					if data.decode('UTF-8') == '/q': break
+					# Convert to Unicode and uppercase
+					dataU = data.decode('UTF-8').upper()
 					print(dataU)
-					#Devuelvo un Echo
+					# Return an Echo
 					connection.sendall(dataU.encode())
 				except:
 					print("No hay data entrante")
 					break
 		finally:
 			# Clean up the connection
-			print("Cerrando conexion")
+			print("Cerrando conexion con", clientAddr)
 			connection.close()
-	
-		return
+			exit(-1)
 
-def threadNuevoC(ip,puerto):
-	tCliente = threading.Thread(name='cliente', target = Cliente,args=(ip,puerto))
-	tCliente.start()
+def threadNewClient(IP,PORT):
+	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT))
+	tClient.start()
 
-threadNuevoC('localhost',4440)
-threadNuevoC('localhost',4439)
-
+threadNewClient('localhost',4440)
+threadNewClient('localhost',4439)
