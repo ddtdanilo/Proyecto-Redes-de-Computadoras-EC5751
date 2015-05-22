@@ -1,4 +1,4 @@
-# Chat client. Python 3.4.3
+# Client Chat. Python 3.4.3
 
 import sys
 import socket

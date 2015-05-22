@@ -1,4 +1,4 @@
-# Chat server. Python 3.4.3
+# Server Chat. Python 3.4.3
 
 import sys
 import socket
@@ -14,7 +14,7 @@ def Client(IP,PORT):
 	try:
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		serverSocket.bind(serverAddr)
-		serverSocket.listen(1)
+		serverSocket.listen(2)
 		print("Configurado con el IP %s por el puerto %s" % serverAddr)
 	except:
 		print("Error. Puerto Ocupado")
