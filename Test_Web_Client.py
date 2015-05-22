@@ -15,16 +15,6 @@ serverAddr = (IP,PORT)
 print("Conectando a %s por el puerto %s" % serverAddr)
 clientSocket.connect(serverAddr)
 
-<<<<<<< HEAD
-# Connect the socket to the port where the server is listening
-puerto = int(input("Introduzca el puerto: "))
-ip = input("Introduzca el ip del servidor: ")
-server_address = (ip,puerto)
-print('Conectando a %s por el puerto %s' % server_address)
-sock.connect(server_address)
-
-=======
->>>>>>> origin/master
 while True:
 	# Send message
 	msg = input("Yo: ").encode()
