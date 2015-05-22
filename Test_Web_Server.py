@@ -15,7 +15,7 @@ def Client(IP,PORT):
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		serverSocket.bind(serverAddr)
 		serverSocket.listen(1)
-		print("Configurado con el IP %s por el puerto %s" %serverAddr)
+		print("Configurado con el IP %s por el puerto %s" % serverAddr)
 	except:
 		print("Error. Puerto Ocupado")
 		exit(-1)
@@ -24,7 +24,7 @@ def Client(IP,PORT):
 		# Wait for a connection
 		try:
 			connection, clientAddr = serverSocket.accept()
-			print("\nConexion proveniente de: ", clientAddr[0])
+			print("\nConexion proveniente de ", clientAddr)
 			# Receive the data in small chunks and retransmit it
 			while True:
 				try:
@@ -40,7 +40,7 @@ def Client(IP,PORT):
 					break
 		finally:
 			# Clean up the connection
-			print("Cerrando conexion")
+			print("Cerrando conexion con", clientAddr)
 			connection.close()
 			exit(-1)
 
@@ -48,5 +48,5 @@ def threadNewClient(IP,PORT):
 	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT))
 	tClient.start()
 
-threadNewClient('127.0.0.1',4440)
-threadNewClient('LocalHost',4439)
+threadNewClient('localhost',4440)
+threadNewClient('localhost',4439)
