@@ -7,7 +7,7 @@ import threading
 
 print("Servidor de Chat")
 
-def Client(IP,PORT,INCOMING_CONN):
+def Client(IP,PORT):
 	# Create Server Socket (TCP)
 	serverAddr = (IP,PORT)
 	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,7 +15,7 @@ def Client(IP,PORT,INCOMING_CONN):
 	try:
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		serverSocket.bind(serverAddr)
-		serverSocket.listen(INCOMING_CONN)
+		serverSocket.listen(4)
 
 		print("Configurado con el IP %s por el puerto %s" % serverAddr)
 	except:
@@ -25,46 +25,33 @@ def Client(IP,PORT,INCOMING_CONN):
 	while True:
 		# Wait for a connection
 		try:
-			connection,clientAddr = serverSocket.accept()
+			connection, clientAddr = serverSocket.accept()
 			print("\nConexion proveniente de ", clientAddr)
-			threadNewConnection(connection,clientAddr)
-			print("Hola")
+			# Receive the data in small chunks and retransmit it
+			while True:
+				try:
+					data = connection.recv(1024)
+					if data.decode('UTF-8') == '/q': break
+					# Convert to Unicode and uppercase
+					dataU = data.decode('UTF-8').upper()
+					print(dataU)
+					# Return an Echo
+					connection.sendall(dataU.encode())
+				except:
+					print("No hay data entrante")
+					break
 		finally:
 			# Clean up the connection
 			print("Cerrando conexion con", clientAddr)
 			connection.close()
 			exit(-1)
 
-
-
-def threadNewClient(IP,PORT,INCOMING_CONN):
-	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT,INCOMING_CONN))
+def threadNewClient(IP,PORT):
+	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT))
 	tClient.start()
-
-def newConnection(connection,clientAddr):
-	while True:
-		try:
-			data = connection.recv(1024)
-			if data.decode('UTF-8') == '/q': break
-			# Convert to Unicode and uppercase
-			dataU = data.decode('UTF-8').upper()
-			print(dataU)
-			# Return an Echo
-			connection.sendall(dataU.encode())
-		except:
-			print("No hay data entrante")
-			break
-
-
-
-def threadNewConnection(connection,clientAddr):
-	tCliente = threading.Thread(name='cliente', target = newConnection, args=(connection,clientAddr))
-	tCliente.start()
-	print("Nuevo Thread entrante")
-
 
 
 ip = str(socket.gethostbyname(socket.gethostname()))
 print(ip)
-#threadNewClient(ip,4440,10)
-threadNewClient(ip,4439,2)
+threadNewClient(ip,4440)
+threadNewClient(ip,4439)
