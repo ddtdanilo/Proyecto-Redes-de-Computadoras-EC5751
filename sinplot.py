@@ -1,6 +1,8 @@
-from pylab import figure, show
+from pylab import *
 from numpy import arange, sin, pi
 import string
+from time import *
+
 
 def empaquetar(float_array):
 	varstr = str(float_array).encode()
@@ -14,7 +16,8 @@ def desempaquetar(byte_array):
 	return var
 
 def plotSignal(tEjeY,tPrincipal,Color,Data):
-	
+	ion()
+	show()
 	fig = figure(1)
 	ax1 = fig.add_subplot(211)
 	var = Data
@@ -25,19 +28,26 @@ def plotSignal(tEjeY,tPrincipal,Color,Data):
 	ax1.set_title('A sine wave or two')
 	for label in ax1.get_xticklabels():
 	    label.set_color(Color)
-	show()
+	draw()
 
 
 
-t = arange(0.0, 1.0, 0.01)
-var=sin(2*pi*t+pi/2)
 
-varbyte=empaquetar(var)
 
-var2 = desempaquetar(varbyte)
-print(len(var2))
 
-plotSignal("Eje Y","Título",'r',var2)
+desfasaje = 0
+
+while True:
+	t = arange(0.0, 1.0, 0.01)
+	var=sin(2*pi*t+ desfasaje)
+	desfasaje += 0.1
+	varbyte=empaquetar(var)
+	
+	var2 = desempaquetar(varbyte)
+	print(len(var2))
+	
+	plotSignal("Eje Y","Título",'r',var2)
+	#sleep(0.1)
 
 
 
