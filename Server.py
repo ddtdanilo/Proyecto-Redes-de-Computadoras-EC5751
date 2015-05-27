@@ -4,11 +4,27 @@
 import sys
 import socket
 import threading
-import string
 from pylab import figure, show
 from numpy import arange, sin, pi
+import string
+from time import *
 
 print("Servidor de Plots")
+
+def plotSignal(tEjeY,tPrincipal,Color,Data,t):
+	
+	fig = figure(1)
+	ax1 = fig.add_subplot(211)
+	var = Data
+	ax1.plot(t,var)
+	ax1.grid(True)
+	ax1.set_ylim( (-2,2) )
+	ax1.set_ylabel(tEjeY)
+	ax1.set_title(tPrincipal)
+	for label in ax1.get_xticklabels():
+	    label.set_color(Color)
+	show()
+
 
 def desempaquetar(byte_array):
 	varstr = byte_array.decode()
@@ -42,25 +58,18 @@ def Client(IP,PORT,Color_Plot):
 				try:
 					data = connection.recv(2048)
 					#print(data)
-					dataU = desempaquetar(data)
-					print(dataU)
-					#Plot
-
-					t = arange(0.0, 1.0, 0.01)
-					fig = figure(1)
-					ax1 = fig.add_subplot(211)
-					ax1.plot(t,var)
-					ax1.grid(True)
-					ax1.set_ylim( (-2,2) )
-					ax1.set_ylabel('V(t)')
-					ax1.set_title('Señal Adquirida por ' + clientAddr)
-					for label in ax1.get_xticklabels():
-					    label.set_color(Color_Plot)
-
-					# Return an Echo
-
-					strSend = "OK"
-					connection.sendall(strSend.encode())
+					if data != b'':
+						t = arange(0.0, 1.0, 0.01)
+						dataU = desempaquetar(data)
+						plotSignal("Eje Y","Título",'r',dataU,t)
+						print(dataU)
+					#print(data)
+					#sleep(3)
+					#break
+					## Return an Echo
+					#
+					#strSend = "OK"
+					#connection.sendall(strSend.encode())
 				except:
 					print("No hay data entrante")
 					break
@@ -79,7 +88,14 @@ def empaquetar(float_array):
 	varbyte = str(float_array).encode()
 	return varbyte
 
+
 ip = str(socket.gethostbyname(socket.gethostname()))
 print(ip)
 threadNewClient(ip,4440,'r')
 threadNewClient(ip,4439,'b')
+t = arange(0.0, 1.0, 0.01)
+var=sin(2*pi*t)
+varbyte=empaquetar(var)
+var2 = desempaquetar(varbyte)
+print(var2)
+#plotSignal("Eje Y","Título",'r',var2,t)

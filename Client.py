@@ -21,7 +21,7 @@ clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Connect the Socket to the port where the Server is listening
 #PORT = int(input("Introduzca el puerto: "))
 #IP = input("Introduzca el IP del servidor: ")
-serverAddr = ('192.168.1.130',4439)
+serverAddr = ('localhost',4439)
 print("Conectando a %s por el puerto %s" % serverAddr)
 clientSocket.connect(serverAddr)
 
