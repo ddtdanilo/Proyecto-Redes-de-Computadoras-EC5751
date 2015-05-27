@@ -31,3 +31,16 @@ l.set_color('g')
 l.set_fontsize('large')
 
 show()
+
+def empaquetar(float_array):
+	varstr = str(float_array).encode()
+	return varstr
+
+def desempaquetar(byte_array):
+	varstr = byte_array.decode()
+	newstr = varstr.replace("[", "")
+	newstr = newstr.replace("]", "")
+	var = [float(s) for s in newstr.split()]
+	return var
+
+

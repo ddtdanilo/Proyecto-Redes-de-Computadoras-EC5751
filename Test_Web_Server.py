@@ -3,7 +3,7 @@
 import sys
 import socket
 import threading
-
+from numpy  import *
 
 print("Servidor de Chat")
 

@@ -2,6 +2,7 @@
 
 import sys
 import socket
+from numpy  import *
 
 
 print('Cliente de Chat. Envie "/q" para salir')
