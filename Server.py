@@ -10,6 +10,13 @@ from numpy import arange, sin, pi
 
 print("Servidor de Plots")
 
+def desempaquetar(byte_array):
+	varstr = byte_array.decode()
+	newstr = varstr.replace("[", "")
+	newstr = newstr.replace("]", "")
+	var = [float(s) for s in newstr.split()]
+	return var
+
 def Client(IP,PORT,Color_Plot):
 	# Create Server Socket (TCP)
 	serverAddr = (IP,PORT)
@@ -33,9 +40,10 @@ def Client(IP,PORT,Color_Plot):
 			# Receive the data in small chunks and retransmit it
 			while True:
 				try:
-					data = connection.recv(1024)
+					data = connection.recv(2048)
+					#print(data)
 					dataU = desempaquetar(data)
-
+					print(dataU)
 					#Plot
 
 					t = arange(0.0, 1.0, 0.01)
@@ -67,12 +75,9 @@ def threadNewClient(IP,PORT,Color_Plot):
 	tClient.start()
 
 
-def desempaquetar(byte_array):
-	varstr = byte_array.decode()
-	newstr = varstr.replace("[", "")
-	newstr = newstr.replace("]", "")
-	var = [float(s) for s in newstr.split()]
-	return var
+def empaquetar(float_array):
+	varbyte = str(float_array).encode()
+	return varbyte
 
 ip = str(socket.gethostbyname(socket.gethostname()))
 print(ip)
