@@ -4,26 +4,47 @@
 import sys
 import socket
 import threading
-from pylab import figure, show
+from pylab import *
 from numpy import arange, sin, pi
 import string
 from time import *
 
 print("Servidor de Plots")
 
-def plotSignal(tEjeY,tPrincipal,Color,Data,t):
-	
-	fig = figure(1)
-	ax1 = fig.add_subplot(211)
-	var = Data
-	ax1.plot(t,var)
-	ax1.grid(True)
-	ax1.set_ylim( (-2,2) )
-	ax1.set_ylabel(tEjeY)
-	ax1.set_title(tPrincipal)
-	for label in ax1.get_xticklabels():
-	    label.set_color(Color)
+def plotSignal(tEjeY,tPrincipal,Color,Data,t,nfigure):
+	ion()
 	show()
+	if nfigure == 1:
+		fig = figure(1)
+		ax1 = fig.add_subplot(211)
+	else:
+		if nfigure == 2:
+			fig = figure(2)
+			ax2 = fig.add_subplot(212)
+	draw()
+	'''if nfigure == 1:
+		ax1 = fig.add_subplot(211)
+		var = Data
+		ax1.plot(t,var)
+		ax1.grid(True)
+		ax1.set_ylim( (-2,2) )
+		ax1.set_ylabel(tEjeY)
+		ax1.set_title(tPrincipal)
+		for label in ax1.get_xticklabels():
+		    label.set_color(Color)
+		draw()
+	if nfigure == 2:
+		ax2 = fig.add_subplot(212)
+		var = Data
+		ax2.plot(t,var)
+		ax2.grid(Truqe)
+		ax2.set_ylim( (-2,2) )
+		ax2.set_ylabel(tEjeY)
+		ax2.set_title(tPrincipal)
+		for label in ax2.get_xticklabels():
+		    label.set_color(Color)
+		draw()'''
+
 
 
 def desempaquetar(byte_array):
@@ -33,7 +54,7 @@ def desempaquetar(byte_array):
 	var = [float(s) for s in newstr.split()]
 	return var
 
-def Client(IP,PORT,Color_Plot):
+def Client(IP,PORT,Color_Plot,nfigure):
 	# Create Server Socket (TCP)
 	serverAddr = (IP,PORT)
 	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -61,15 +82,7 @@ def Client(IP,PORT,Color_Plot):
 					if data != b'':
 						t = arange(0.0, 1.0, 0.01)
 						dataU = desempaquetar(data)
-						plotSignal("Eje Y","Título",'r',dataU,t)
-						print(dataU)
-					#print(data)
-					#sleep(3)
-					#break
-					## Return an Echo
-					#
-					#strSend = "OK"
-					#connection.sendall(strSend.encode())
+						plotSignal("Eje Y","Título",'r',dataU,t,nfigure)
 				except:
 					print("No hay data entrante")
 					break
@@ -79,8 +92,8 @@ def Client(IP,PORT,Color_Plot):
 			connection.close()
 			exit(-1)
 
-def threadNewClient(IP,PORT,Color_Plot):
-	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT,Color_Plot))
+def threadNewClient(IP,PORT,Color_Plot,nfigure):
+	tClient = threading.Thread(name='client', target = Client,args=(IP,PORT,Color_Plot,nfigure))
 	tClient.start()
 
 
@@ -91,11 +104,5 @@ def empaquetar(float_array):
 
 ip = str(socket.gethostbyname(socket.gethostname()))
 print(ip)
-threadNewClient(ip,4440,'r')
-threadNewClient(ip,4439,'b')
-t = arange(0.0, 1.0, 0.01)
-var=sin(2*pi*t)
-varbyte=empaquetar(var)
-var2 = desempaquetar(varbyte)
-print(var2)
-#plotSignal("Eje Y","Título",'r',var2,t)
+threadNewClient(ip,4440,'r',1)
+threadNewClient(ip,4439,'b',2)
