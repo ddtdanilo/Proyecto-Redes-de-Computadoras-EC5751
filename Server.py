@@ -8,42 +8,25 @@ from pylab import *
 from numpy import arange, sin, pi
 import string
 from time import *
+import logging
 
 print("Servidor de Plots")
 
 def plotSignal(tEjeY,tPrincipal,Color,Data,t,nfigure):
-	ion()
+	'''ion()
 	show()
-	if nfigure == 1:
-		fig = figure(1)
-		ax1 = fig.add_subplot(211)
-	else:
-		if nfigure == 2:
-			fig = figure(2)
-			ax2 = fig.add_subplot(212)
-	draw()
-	'''if nfigure == 1:
-		ax1 = fig.add_subplot(211)
-		var = Data
-		ax1.plot(t,var)
-		ax1.grid(True)
-		ax1.set_ylim( (-2,2) )
-		ax1.set_ylabel(tEjeY)
-		ax1.set_title(tPrincipal)
-		for label in ax1.get_xticklabels():
-		    label.set_color(Color)
-		draw()
-	if nfigure == 2:
-		ax2 = fig.add_subplot(212)
-		var = Data
-		ax2.plot(t,var)
-		ax2.grid(Truqe)
-		ax2.set_ylim( (-2,2) )
-		ax2.set_ylabel(tEjeY)
-		ax2.set_title(tPrincipal)
-		for label in ax2.get_xticklabels():
-		    label.set_color(Color)
-		draw()'''
+	ax1 = fig.add_subplot(211)
+	var = Data
+	ax1.plot(t,var)
+	ax1.grid(True)
+	ax1.set_ylim( (-2,2) )
+	ax1.set_ylabel(tEjeY)
+	ax1.set_title(tPrincipal)
+	for label in ax1.get_xticklabels():
+	    label.set_color(Color)
+	draw()'''
+	print(Data)
+	
 
 
 
@@ -67,13 +50,17 @@ def Client(IP,PORT,Color_Plot,nfigure):
 		print("Configurado con el IP %s por el puerto %s" % serverAddr)
 	except:
 		print("Error. Puerto Ocupado")
+		strIn = "Error. Puerto Ocupado " + str(PORT)
+		logging.info("Error. Puerto Ocupado")
 		exit(-1)
 
 	while True:
 		# Wait for a connection
 		try:
 			connection, clientAddr = serverSocket.accept()
-			print("\nConexion proveniente de ", clientAddr)
+			strNC = "\nConexion proveniente de " + str(clientAddr) + "\n"
+			print(strNC)
+			logging.info(strNC)
 			# Receive the data in small chunks and retransmit it
 			while True:
 				try:
@@ -83,12 +70,20 @@ def Client(IP,PORT,Color_Plot,nfigure):
 						t = arange(0.0, 1.0, 0.01)
 						dataU = desempaquetar(data)
 						plotSignal("Eje Y","Título",'r',dataU,t,nfigure)
+						rString = "OK"
+						connection.sendall(rString.encode())
+						### Guardar en archivo
+						strDataf = 'Data proveniente de:  '  + str(clientAddr) + '\n' + str(dataU) + '\n'
+						logging.info(strDataf)
+						
 				except:
 					print("No hay data entrante")
 					break
 		finally:
 			# Clean up the connection
-			print("Cerrando conexion con", clientAddr)
+			strOut = "Cerrando conexion con " + str(clientAddr)
+			print(strOut)
+			logging.info(strOut)
 			connection.close()
 			exit(-1)
 
@@ -104,5 +99,10 @@ def empaquetar(float_array):
 
 ip = str(socket.gethostbyname(socket.gethostname()))
 print(ip)
+logging.basicConfig(filename='dataLog.txt',level=logging.DEBUG)
+Head = '\n\n\n\n' + datetime.datetime.now().strftime(" Fecha: %d/%m/%Y Hora: %H:%M:%S") + '\n'
+print(Head)
+logging.info(Head)
+logging.info('IP de este servidor %s \n' %ip)
 threadNewClient(ip,4440,'r',1)
 threadNewClient(ip,4439,'b',2)
