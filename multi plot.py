@@ -8,7 +8,7 @@ class Dummy():
 
     def plotme(self, iteration = 1):
 
-        print "%ix plotting... " % iteration,
+        print("%ix plotting... " % iteration)
         t = arange(0.0, 2.0, 0.01)
         s = sin(2*pi*t)
 

@@ -1,6 +1,9 @@
 # Server Remote Plotter. Python 3.4.3
 #Danilo D & George K.
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import sys
 import socket
 import threading
@@ -12,19 +15,15 @@ import logging
 
 print("Servidor de Plots")
 
-def plotSignal(tEjeY,tPrincipal,Color,Data,t,nfigure):
-	'''ion()
-	show()
-	ax1 = fig.add_subplot(211)
-	var = Data
-	ax1.plot(t,var)
-	ax1.grid(True)
-	ax1.set_ylim( (-2,2) )
-	ax1.set_ylabel(tEjeY)
-	ax1.set_title(tPrincipal)
-	for label in ax1.get_xticklabels():
-	    label.set_color(Color)
-	draw()'''
+def plotSignal(tEjeY,tPrincipal,Color,Data,t,nfigure,IP,Contador):
+	fig, ax = plt.subplots()
+	ax.plot(t,Data)
+	ax.set_xlabel('t(s)')
+	ax.set_ylabel('voltaje (mV)')
+	ax.set_title('Data entrante desde: %s' %str(IP))
+	#dImage = "" + str(IP) + " " + str(Contador) + ".png"
+	#hFecha = datetime.datetime.now().strftime(" Fecha: %d/%m/%Y Hora: %H:%M:%S")
+	fig.savefig("Registro/" + str(IP) + " " + str(Contador)  + ".png")
 	print(Data)
 	
 
@@ -41,6 +40,7 @@ def Client(IP,PORT,Color_Plot,nfigure):
 	# Create Server Socket (TCP)
 	serverAddr = (IP,PORT)
 	serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	Contador = 1
 
 	try:
 		serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -69,7 +69,8 @@ def Client(IP,PORT,Color_Plot,nfigure):
 					if data != b'':
 						t = arange(0.0, 1.0, 0.01)
 						dataU = desempaquetar(data)
-						plotSignal("Eje Y","Título",'r',dataU,t,nfigure)
+						plotSignal("Eje Y","Título",'r',dataU,t,nfigure,clientAddr,Contador)
+						Contador = Contador + 1
 						rString = "OK"
 						connection.sendall(rString.encode())
 						### Guardar en archivo
@@ -105,4 +106,4 @@ print(Head)
 logging.info(Head)
 logging.info('IP de este servidor %s \n' %ip)
 threadNewClient(ip,4440,'r',1)
-threadNewClient(ip,4439,'b',2)
+threadNewClient(ip,4441,'b',2)

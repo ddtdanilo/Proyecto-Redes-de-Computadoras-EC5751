@@ -18,9 +18,9 @@ print('Cliente de Plots.')
 # Create Client Socket (TCP)
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Connect the Socket to the port where the Server is listening
-#PORT = int(input("Introduzca el puerto: "))
-#IP = input("Introduzca el IP del servidor: ")
-serverAddr = ('192.168.43.85',4439)
+PORT = int(input("Introduzca el puerto: "))
+IP = input("Introduzca el IP del servidor: ")
+serverAddr = (IP,PORT)
 print("Conectando a %s por el puerto %s" % serverAddr)
 clientSocket.connect(serverAddr)
 desfase = 0
