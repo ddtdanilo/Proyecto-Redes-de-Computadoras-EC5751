@@ -105,5 +105,5 @@ Head = '\n\n\n\n' + datetime.datetime.now().strftime(" Fecha: %d/%m/%Y Hora: %H:
 print(Head)
 logging.info(Head)
 logging.info('IP de este servidor %s \n' %ip)
-threadNewClient(ip,4440,'r',1)
-threadNewClient(ip,4441,'b',2)
+threadNewClient(ip,4444,'r',1)
+threadNewClient(ip,4445,'b',2)

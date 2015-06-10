@@ -1,7 +1,7 @@
 # Client Plotter. Python 3.4.3
 
 from time import *
-from pylab import figure, show
+#from pylab import figure, show
 from numpy import arange, sin, pi
 import string
 import sys
