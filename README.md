@@ -6,3 +6,7 @@ los clientes. En este caso, la señal es una sinusoidal que cambia en +pi/2 su d
 
 Video de demostración de funcionamiento:
 https://youtu.be/xJTMeqM3Cyk
+
+This project makes a connection Client-Server were the server plot and saves .png files of a signal transmitted by the client. In this case, that signal is a sinusoid that changes the phase in steps of +pi/2.
+
+https://youtu.be/xJTMeqM3Cyk
